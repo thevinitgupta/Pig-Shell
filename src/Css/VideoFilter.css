@@ -1,0 +1,10 @@
+.VideoFilter {
+    width: 100%;
+}
+.VideoCamera{
+    width: 100%;
+    object-fit: contain;
+}
+.VideoCamera>video{
+    display: none;
+}

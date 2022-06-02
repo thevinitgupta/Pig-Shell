@@ -7,6 +7,7 @@ class AsciiEffect {
     #ctx;
     #width;
     #height;
+    #htmlArray = [];
     constructor(ctx, width, height, image){
         this.#ctx = ctx;
         this.#width = width;
@@ -30,7 +31,9 @@ class AsciiEffect {
     }
     #scanImage(cellSize, color){
         this.#imageCellArray = [];
+        this.#htmlArray = [];
         for(let y  = 0; y < this.#pixels.height; y += cellSize){
+            let row = '';
             for(let x = 0; x < this.#pixels.width; x += cellSize){
                 let posX = (x*4), posY = y*4;
                 const pos = (posY*this.#pixels.width) + posX;
@@ -39,8 +42,10 @@ class AsciiEffect {
                     const avgColorValue = total/3;
                     const symbol = this.#convertToSymbol(avgColorValue);
                     this.#imageCellArray.push(new Cell(x,y, symbol, color));
+                    row += symbol; 
                 }
             }
+            this.#htmlArray.push(row);
         }
         // console.log(this.#imageCellArray);
     }
@@ -54,6 +59,10 @@ class AsciiEffect {
     draw(cellSize, color){
         this.#scanImage(cellSize, color);
         this.#drawAscii();
+    }
+    drawHtml(cellSize,color){
+        this.#scanImage(cellSize,color);
+        return this.#htmlArray;
     }
 }
 

@@ -14,6 +14,7 @@ function VideoFilter(){
             const video = videoRef.current;
             video.srcObject = stream;
             video.play();
+            console.log(video)
         }).catch(e =>{
             console.error(e);
         })

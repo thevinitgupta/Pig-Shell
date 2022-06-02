@@ -8,3 +8,39 @@
 .VideoCamera>video{
     display: none;
 }
+.VideoCanvas{
+    height: 60vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.VideoCanvas>canvas{
+    flex: 0.8;
+    max-width: 620px;
+    max-height: 510px;
+    border-radius: 5px;
+}.VideoCanvas>video {
+    display: none;
+}
+.CanvasBtns{
+    flex: 0.2;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.CanvasBtns>div {
+    flex: 0.12;
+    font-size: 1rem;
+    padding: 2%;
+    color: var(--default-background);
+    border: none;
+    border-radius: 5px;
+}
+.CanvasStart{
+    background-color: green;
+}
+.CanvasStop{
+    background-color: red;
+}

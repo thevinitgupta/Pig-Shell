@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef,useState } from "react";
 import "../Css/VideoFilter.css"
 import VideoCanvas from "./VideoCanvas";
 
 
 function VideoFilter(){
+    const [streaming,setStreaming] = useState(false);
+    const [localStream,setLocalStream] = useState({});
     const videoRef = useRef(null);
 
     const getVideo = () =>{
@@ -13,6 +15,8 @@ function VideoFilter(){
         }).then(stream =>{
             const video = videoRef.current;
             video.srcObject = stream;
+            console.log(stream)
+            setLocalStream(stream);
             video.play();
             console.log(video)
         }).catch(e =>{
@@ -21,22 +25,53 @@ function VideoFilter(){
     }
 
     const stopStreaming = () =>{
-        window.navigator.mediaDevices.getUserMedia({video : {width : 0, height : 0}});
+        console.log(localStream)
+        localStream.getTracks().forEach(function (track) {
+            track.stop();
+         });
+        // window.navigator.mediaDevices.getUserMedia({video : {width : 0, height : 0}});
     }
 
-    useEffect(()=>{
+    const startLive = () =>{
         getVideo();
-        return stopStreaming();
-    },[videoRef])
+        setStreaming(true);
+    }
+
+    const stopLive = () =>{
+        stopStreaming();
+        setStreaming(false);
+    }
+
+    const handleCustomUpload = () =>{
+
+    }
+
+    // useEffect(()=>{
+    //     return stopStreaming();
+    // },[])
     return (
         <div className="VideoFilter">
             <div className="VideoHead">
-
+                <div className='ImageUploader-head'>
+                    Ready to see the <span className="highlight-text">{`<magic?/>`}</span>
+                </div>
+                <div className="VideoBtns">
+                <div className='VideoUpload-btn' onClick={()=>{
+                    handleCustomUpload();
+                }}>
+                    Upload Video
+                </div>
+                <div className='VideoUpload-btn' onClick={()=>{
+                    streaming===false ? startLive() : stopLive();
+                }}>
+                    {streaming ? "Stop Capture" : "Start Capture"}
+                </div>
+                </div>
             </div>
-            <div className="VideoCamera">
+            {streaming && <div className="VideoCamera">
                 <video autoPlay={true} ref={videoRef} />
                 <VideoCanvas videoRef={videoRef}/>
-            </div>
+            </div>}
         </div>
     );
 }

@@ -66,7 +66,7 @@ export default function VideoCanvas({ videoRef }) {
             <video ref={recorderRef}></video>
             <div className='CanvasBtns'>
                 <div className='CanvasStart' onClick={startRecording}>Start</div>
-                <div className='CanvasStop' onClick={stopRecording}>stop</div>
+                <div className='CanvasStop' onClick={stopRecording}>Stop</div>
             </div>
         </div>
     )

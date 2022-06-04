@@ -60,10 +60,6 @@ function VideoFilter(){
         const lastDot = currName.lastIndexOf(".");
         setVideoName(currName.substring(0,lastDot)+"-pigshell"+currName.substring(lastDot))
         setVideoUrl(URL.createObjectURL(event.target.files[0]));
-        const video = videoRef.current;
-        console.log(video);
-        video.srcObject = videoUrl;
-        video.play();
     }
 
     // useEffect(()=>{

@@ -13,7 +13,7 @@ function VideoFilter(){
     const [videoName,setVideoName] = useState(false);
     const [videoUrl,setVideoUrl] = useState("");
     const [localStream,setLocalStream] = useState({});
-    const [previewVideo,setPreviewVideo] = useState(null);
+    const [previewVideo,setPreviewVideo] = useState({});
     const videoRef = useRef(null);
     const uploaderRef = useRef(null);
 
@@ -56,10 +56,22 @@ function VideoFilter(){
     const fileChangedHandler = (event) => {
         const currVideo = event.target.files[0];
         console.log(currVideo);
-        const currName = event.target.files[0].name;
+        setPreviewVideo((prevValue)=>{
+            return currVideo})
+        const currName =currVideo.name;
         const lastDot = currName.lastIndexOf(".");
+        const videoExt = currName.substring(lastDot);
         setVideoName(currName.substring(0,lastDot)+"-pigshell"+currName.substring(lastDot))
-        setVideoUrl(URL.createObjectURL(event.target.files[0]));
+        videoHandler(URL.createObjectURL(currVideo));
+        // setTimeout(()=>{
+        // },2000)
+    }
+
+    const videoHandler = (url) =>{
+        const video = videoRef.current;
+        video.src = url;
+        video.play();
+
     }
 
     // useEffect(()=>{
@@ -87,9 +99,9 @@ function VideoFilter(){
                 </div>
             </div>
 
-            {streaming ? <div className="VideoCamera">
+            {streaming || previewVideo ? <div className="VideoCamera">
                 <video autoPlay={true} ref={videoRef} />
-                <VideoCanvas videoRef={videoRef}/>
+                {streaming && <VideoCanvas videoRef={videoRef}/>}
             </div> : 
             <div className='PreviewImage'>
             <div className='PreviewBackground'>

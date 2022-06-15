@@ -47,6 +47,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    position: relative;
 }
 .VideoCanvas>canvas{
     flex: 0.8;
@@ -82,4 +83,15 @@
 }
 .CanvasStop{
     background-color: #f73a22;
+}
+video {
+    display: none;
+}
+@media screen and (max-width : 830px) {
+    .VideoFilter{
+        flex-direction: column;
+    }
+    .VideoBtns{
+        margin-bottom: 5%;
+    }
 }

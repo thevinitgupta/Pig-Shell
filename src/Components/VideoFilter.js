@@ -10,15 +10,11 @@ import VideoCanvas from "./VideoCanvas";
 
 function VideoFilter(){
     const [streaming,setStreaming] = useState(false);
-    const [videoName,setVideoName] = useState(false);
-    const [videoUrl,setVideoUrl] = useState("");
     const [localStream,setLocalStream] = useState({});
-    const [previewVideo,setPreviewVideo] = useState({});
     const videoRef = useRef(null);
-    const uploaderRef = useRef(null);
 
     const getVideo = () =>{
-        console.log("getVideo called")
+        setStreaming(true);
         window.navigator.mediaDevices.getUserMedia({
             video : {width : 1920, height : 1080}
         }).then(stream =>{
@@ -26,14 +22,12 @@ function VideoFilter(){
             video.srcObject = stream;
             setLocalStream(stream);
             video.play();
-            console.log(video)
         }).catch(e =>{
             console.error(e);
         })
     }
 
     const stopStreaming = () =>{
-        console.log(localStream)
         localStream.getTracks().forEach(function (track) {
             track.stop();
          });
@@ -41,7 +35,6 @@ function VideoFilter(){
 
     const startLive = () =>{
         getVideo();
-        setStreaming(true);
     }
 
     const stopLive = () =>{
@@ -49,48 +42,14 @@ function VideoFilter(){
         setStreaming(false);
     }
 
-    const handleCustomUpload = () =>{
-        uploaderRef.current.click();
-    }
-
-    const fileChangedHandler = (event) => {
-        const currVideo = event.target.files[0];
-        console.log(currVideo);
-        setPreviewVideo((prevValue)=>{
-            return currVideo})
-        const currName =currVideo.name;
-        const lastDot = currName.lastIndexOf(".");
-        const videoExt = currName.substring(lastDot);
-        setVideoName(currName.substring(0,lastDot)+"-pigshell"+currName.substring(lastDot))
-        videoHandler(URL.createObjectURL(currVideo));
-        // setTimeout(()=>{
-        // },2000)
-    }
-
-    const videoHandler = (url) =>{
-        const video = videoRef.current;
-        video.src = url;
-        video.play();
-
-    }
-
-    // useEffect(()=>{
-    //     return stopStreaming();
-    // },[])
     return (
         <div className="VideoFilter">
             <div className="VideoHead">
-                <div className='ImageUploader-head'>
+                {!streaming &&<div className='ImageUploader-head'>
                     Ready to see the <span className="highlight-text">{`<magic?/>`}</span>
-                </div>
+                </div>}
                 <div className="VideoBtns">
-                <input type="file" ref={uploaderRef} accept="video/*" name="uploadImage" id="uploadImage" onChange={fileChangedHandler} style={{display : "none"}}/>
 
-                <div className='VideoUpload-btn' onClick={()=>{
-                    handleCustomUpload();
-                }}>
-                    Upload Video
-                </div>
                 <div className='VideoUpload-btn' onClick={()=>{
                     streaming===false ? startLive() : stopLive();
                 }}>
@@ -98,11 +57,11 @@ function VideoFilter(){
                 </div>
                 </div>
             </div>
-
-            {streaming || previewVideo ? <div className="VideoCamera">
-                <video autoPlay={true} ref={videoRef} />
-                {streaming && <VideoCanvas videoRef={videoRef}/>}
-            </div> : 
+            {streaming ? <div className="VideoCamera">
+                <video  ref={videoRef}  />
+                <VideoCanvas videoRef={videoRef}/>
+            </div> 
+            : 
             <div className='PreviewImage'>
             <div className='PreviewBackground'>
                 <img className='Preview-BgImg Bg-Img-1' src={Obj1} alt="object"/>
@@ -111,17 +70,8 @@ function VideoFilter(){
                 <img className='Preview-BgImg Bg-Img-4' src={Obj4} alt="object"/>
             </div>
             <div className='PreviewGlass'>
-                {previewVideo==null && <img src={Convert} className="ConvertPreview" alt="conversion example"/>}
                 {/* <img src={previewImage} className="ConvertPreview FilteredPreview" alt="conversion example"/> */}
-                {previewVideo && 
-                <div className='PreviewBtns'>
-                    <div className='downloadImg-btn' >
-                        Download
-                    </div>
-                    <div className='uploadImg-btn'>
-                        Upload
-                    </div>
-                </div>}
+                <img src={Convert} className="ConvertPreview" alt="conversion example"/>
             </div>
         </div> }
         </div>

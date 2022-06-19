@@ -1,22 +1,26 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import SignupImg from "../Assets/Signup.png"
 import "../Css/Signup.css"
 import Pig from "../Assets/pig.png"
 import { useNavigate } from 'react-router-dom';
+import { FirebaseContext } from './Firebase';
 
 function Signup() {
     const [name,setName] = useState("");
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
 
+    const firebase = useContext(FirebaseContext);
     const navigator = useNavigate();
-
+    
     const handleSignup = (e) => {
         e.preventDefault();
         if(name === '' || email==='' || password === ''){
             alert('All fields are required');
             return;
         }
+
+        firebase.createAccount(email,password);
         // console.log({name : name, email : email, password : password});
     }
    return (

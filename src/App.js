@@ -8,6 +8,7 @@ import Navbar from './Components/Navbar';
 // import Authentication from "./Components/Session/index.js"
 import Dashboard from './Components/Dashboard';
 import VideoFilter from './Components/VideoFilter';
+import {withAuthentication} from "./Components/Session"
 
 
 function App() {
@@ -34,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthentication(App);

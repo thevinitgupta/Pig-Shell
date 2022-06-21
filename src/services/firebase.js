@@ -1,5 +1,6 @@
 import {initializeApp} from "firebase/app"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -26,6 +27,19 @@ class FirebaseService {
         catch(error){
             console.error(error)
         }
+    }
+    async loginUser(email, password){
+        try {
+            const credentials = await signInWithEmailAndPassword(this.firebaseAuth, email, password)
+            this.user = credentials.user;
+        }
+        catch(error){
+            console.error(error)
+        }
+    }
+
+    getUser(){
+        return this.firebaseAuth.currentUser;
     }
 
 }

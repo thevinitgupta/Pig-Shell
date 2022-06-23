@@ -38,8 +38,13 @@ class FirebaseService {
         }
     }
 
+    getAuth(){
+        return getAuth();
+    }
+
     getUser(){
-        return this.firebaseAuth.currentUser;
+        const auth = getAuth();
+        return auth.currentUser;
     }
 
 }

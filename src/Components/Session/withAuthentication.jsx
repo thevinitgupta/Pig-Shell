@@ -9,12 +9,7 @@ const Authentication = (Component) =>
         const firebase = useContext(FirebaseContext);
 
         const getCurrentUser = useCallback(() => {
-            firebase.getUser().then((user) => {
-                setAuthUser(user);
-            }).catch((error) =>{
-                // console.error("Auth User : ",error)
-                setAuthUser(null);
-            });
+            console.log(firebase.getUser());
         }, [firebase]);
 
         useEffect(() =>{

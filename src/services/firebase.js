@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app"
-import { getAuth, createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged ,createUserWithEmailAndPassword, 
+    setPersistence, signInWithEmailAndPassword, signOut , browserSessionPersistence} from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -13,10 +13,11 @@ const firebaseConfig = {
 };
 
 class FirebaseService {
+    user = null;
     constructor(){
         this.connection = initializeApp(firebaseConfig);
         this.firebaseAuth = getAuth();
-        this.user = {};
+        this.user = this.firebaseAuth.currentUser;
     }
     async createAccount(email, password){
         try {
@@ -28,23 +29,44 @@ class FirebaseService {
             console.error(error)
         }
     }
+
     async loginUser(email, password){
-        try {
-            const credentials = await signInWithEmailAndPassword(this.firebaseAuth, email, password)
-            this.user = credentials.user;
+        const auth = getAuth();
+        setPersistence(auth, browserSessionPersistence)
+        try{
+            const userCred = await signInWithEmailAndPassword(auth, email, password);
+            this.user = userCred.user;
+            console.log(this.user)
         }
-        catch(error){
-            console.error(error)
+        catch(error) {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("login error")
+        };
+        
+    }
+
+    async logoutUser(){
+        const auth = getAuth();
+        try{
+            signOut().then(()=>{
+                this.user = null;
+                console.log("Signed Out Successfully")
+            })
+        }
+        catch(error) {
+            console.log("Error Logging Out");
+            console.log(error)
         }
     }
 
-    getAuth(){
-        return getAuth();
-    }
 
     getUser(){
         const auth = getAuth();
-        return auth.currentUser;
+        onAuthStateChanged(auth, (user) => {
+            return user
+          });
     }
 
 }

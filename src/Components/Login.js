@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import LoginImg from "../Assets/Signup.png"
 import "../Css/Login.css"
 import Pig from "../Assets/pig.png"
 import { useNavigate } from 'react-router-dom';
-import {FirebaseContext} from "./Firebase"
+import FirebaseService, {FirebaseContext} from "./Firebase"
 
 
 function Login() {
@@ -13,15 +13,22 @@ function Login() {
     const navigator = useNavigate();
     const firebase = useContext(FirebaseContext);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         if(email==='' || password === ''){
             alert('All fields are required');
             return;
         }
-        firebase.loginUser(email,password);
-        // console.log({ email : email, password : password});
+        
+        const userCredential = firebase.loginUser(email,password);
     }
+
+    useEffect(()=>{
+        const firebaseService = new FirebaseService();
+        if(firebaseService.user!=null){
+            window.location = "/"
+        }
+    },[])
 
    return (
     <div className='Login'>

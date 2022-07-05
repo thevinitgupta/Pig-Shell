@@ -10,19 +10,25 @@ import Dashboard from './Components/Dashboard';
 import VideoFilter from './Components/VideoFilter';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { login, logout } from './Store/features/userSlice';
 
 
 function App() {
   const user = null;
+  const dispatch = useDispatch();
   useEffect(()=>{
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
       if (userAuth) {
         if(userAuth) {
-          console.log(userAuth);
+          dispatch(login({
+            uid : userAuth.uid,
+            email : userAuth.email,
+          }));
         }
       } else {
-        console.log("Not Logged In")
+        dispatch(logout);
       }
     });
     return unsubscribe;

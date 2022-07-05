@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import LoginImg from "../Assets/Signup.png"
 import "../Css/Login.css"
 import Pig from "../Assets/pig.png"
 import { useNavigate } from 'react-router-dom';
-import FirebaseService, {FirebaseContext} from "./Firebase"
+import {default as firebase} from '../services/firebase';
 
 
 function Login() {
@@ -11,7 +11,6 @@ function Login() {
     const [password,setPassword] = useState("");
 
     const navigator = useNavigate();
-    const firebase = useContext(FirebaseContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -20,15 +19,9 @@ function Login() {
             return;
         }
         
-        const userCredential = firebase.loginUser(email,password);
+        const userCredential = await firebase.login(email,password);
+        console.log(userCredential.user)
     }
-
-    useEffect(()=>{
-        const firebaseService = new FirebaseService();
-        if(firebaseService.user!=null){
-            window.location = "/"
-        }
-    },[])
 
    return (
     <div className='Login'>

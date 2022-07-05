@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app"
-import { getAuth, onAuthStateChanged ,createUserWithEmailAndPassword, 
-    setPersistence, signInWithEmailAndPassword, signOut , browserSessionPersistence} from "firebase/auth";
+import { getAuth ,createUserWithEmailAndPassword, 
+     signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -12,66 +12,58 @@ const firebaseConfig = {
     measurementId: "G-QH72FWKWZC"
 };
 
-class FirebaseService {
-    user = null;
-    constructor(){
-        this.connection = initializeApp(firebaseConfig);
-        this.firebaseAuth = getAuth();
-        this.user = this.firebaseAuth.currentUser;
-    }
-    async createAccount(email, password){
-        try {
-            const credentials = await createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-            this.user = credentials.user;
-            console.log(this.user);
-        }
-        catch(error){
-            console.error(error)
-        }
-    }
 
-    async loginUser(email, password){
-        const auth = getAuth();
-        setPersistence(auth, browserSessionPersistence)
-        try{
-            const userCred = await signInWithEmailAndPassword(auth, email, password);
-            this.user = userCred.user;
-            console.log(this.user)
-        }
-        catch(error) {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log("login error")
-        };
-        
+const createAccount = async(email, password) =>{
+    try {
+        const credentials = await createUserWithEmailAndPassword(this.firebaseAuth, email, password)
+        this.user = credentials.user;
+        console.log(this.user);
     }
-
-    async logoutUser(){
-        const auth = getAuth();
-        try{
-            signOut().then(()=>{
-                this.user = null;
-                console.log("Signed Out Successfully")
-            })
-        }
-        catch(error) {
-            console.log("Error Logging Out");
-            console.log(error)
-        }
+    catch(error){
+        console.error(error)
     }
+}
 
-
-    getUser(){
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            return user
-          });
+const loginUser = async(email, password) => {
+    const auth = getAuth();
+    try{
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        return userCred;
     }
+    catch(error) {
+        console.log("login error")
+        return null;
+    };
+    
+}
 
+const logoutUser = async ()=>{
+    // const auth = getAuth();
+    try{
+        signOut().then(()=>{
+            this.user = null;
+            console.log("Signed Out Successfully")
+        })
+    }
+    catch(error) {
+        console.log("Error Logging Out");
+        console.log(error)
+    }
 }
 
 
 
 
-export default FirebaseService;
+const firebaseMethods = {
+    signup : createAccount,
+    login : loginUser,
+    logout : logoutUser,
+}
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth;
+
+
+export {auth}
+
+export default firebaseMethods;

@@ -8,10 +8,25 @@ import Navbar from './Components/Navbar';
 // import Authentication from "./Components/Session/index.js"
 import Dashboard from './Components/Dashboard';
 import VideoFilter from './Components/VideoFilter';
-import {withAuthentication} from "./Components/Session"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect } from 'react';
 
 
 function App() {
+  const user = null;
+  useEffect(()=>{
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
+      if (userAuth) {
+        if(userAuth) {
+          console.log(userAuth);
+        }
+      } else {
+        console.log("Not Logged In")
+      }
+    });
+    return unsubscribe;
+  },[])
   return (
       <div className="App">
     <Routes>
@@ -35,4 +50,4 @@ function App() {
   );
 }
 
-export default withAuthentication(App);
+export default App;

@@ -16,8 +16,7 @@ const firebaseConfig = {
 const createAccount = async(email, password) =>{
     try {
         const credentials = await createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-        this.user = credentials.user;
-        console.log(this.user);
+        return credentials.user;
     }
     catch(error){
         console.error(error)
@@ -28,26 +27,31 @@ const loginUser = async(email, password) => {
     const auth = getAuth();
     try{
         const userCred = await signInWithEmailAndPassword(auth, email, password);
-        return userCred;
+        return {
+            code : 200,
+            user : userCred.user
+        }
     }
     catch(error) {
-        console.log("login error")
-        return null;
+        return {
+            code : 500,
+            user : null
+        };
     };
     
 }
 
 const logoutUser = async ()=>{
-    // const auth = getAuth();
+    const auth = getAuth();
     try{
-        signOut().then(()=>{
-            this.user = null;
-            console.log("Signed Out Successfully")
-        })
+        const resp = await signOut(auth);
+        console.log("Signed Out Successfully")
+        return 200;
     }
     catch(error) {
         console.log("Error Logging Out");
         console.log(error)
+        return 500;
     }
 }
 

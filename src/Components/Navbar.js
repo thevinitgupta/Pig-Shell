@@ -1,15 +1,30 @@
-import React, { useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import Logo from "../Assets/pig.png"
 import "../Css/Navbar.css"
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from '../features/userSlice';
+import {default as firebase} from '../services/firebase';
 
 function Navbar() {
   // const [useSandwich, setUseSandwich] = useState(true);
   const [openDropDown, setOpenDropDown] = useState(true);
-  const authUser = {};
+  const [loggedIn, setLoggedIn] = useState(false);
+  const authUser = useSelector(selectUser);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    const loggedOut = await firebase.logout();
+    
+    if(loggedOut===200){
+      dispatch(logout);
+      setLoggedIn(false);
+      alert("Logged Out Successfully")
+    }
+    else {
+      alert("Error Logging out!")
+    }
 
   };
 
@@ -19,6 +34,15 @@ function Navbar() {
       return !prevValue;
     })
   }
+
+  useEffect(()=>{
+    if(authUser!=null){
+      setLoggedIn(true);
+    }
+    else {
+      setLoggedIn(false);
+    }
+  },[authUser])
 
 
   return (
@@ -35,12 +59,12 @@ function Navbar() {
             <div className='Nav-item' onClick={()=>{
               navigate("/video");
             }}>Video Filter</div>
-            {!authUser ? <div className='Nav-item' onClick={()=>{
+            {!loggedIn ? <div className='Nav-item' onClick={()=>{
               navigate("/signup");
             }}>Signup</div> : <div className='Nav-item' onClick={()=>{
               navigate("/dashboard");
             }}>Profile</div>}
-            {!authUser? <div className='Login-Btn' onClick={()=>{
+            {!loggedIn? <div className='Login-Btn' onClick={()=>{
               navigate("/login");
             }}>Login</div> : <div className='Nav-item' onClick={()=>{
               handleLogout();
@@ -67,7 +91,7 @@ function Navbar() {
               toggleDropDown();
               navigate("/video");
             }}>Video Filter</div>
-            {!authUser ? <div className='Drop-item' onClick={()=>{
+            {!loggedIn ? <div className='Drop-item' onClick={()=>{
               navigate("/signup");
             }}>Signup</div>: <div className='Drop-item' onClick={()=>{
               toggleDropDown();
@@ -75,7 +99,7 @@ function Navbar() {
             }}>Profile</div>}
             <div className='Drop-item'>
 
-            {!authUser ? 
+            {!loggedIn ? 
             <div className="Drop-Login" onClick={()=>{
               navigate("/login");
             }}>Login</div>

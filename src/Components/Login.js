@@ -19,8 +19,14 @@ function Login() {
             return;
         }
         
-        const userCredential = await firebase.login(email,password);
-        console.log(userCredential.user)
+        const loginResponse = await firebase.login(email,password);
+        if(loginResponse?.code===500){
+            alert("Error Logging in")
+        }
+        else {
+            navigator("/");
+        }
+        // console.log(loginResponse)
     }
 
    return (

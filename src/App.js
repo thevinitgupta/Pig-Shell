@@ -10,12 +10,12 @@ import Dashboard from './Components/Dashboard';
 import VideoFilter from './Components/VideoFilter';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { login, logout } from './Store/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout, selectUser } from './features/userSlice';
 
 
 function App() {
-  const user = null;
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   useEffect(()=>{
     const auth = getAuth();

@@ -24,6 +24,7 @@ function Login() {
             alert("Error Logging in")
         }
         else {
+            console.log(loginResponse.user)
             navigator("/");
         }
         // console.log(loginResponse)

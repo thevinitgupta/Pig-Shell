@@ -19,8 +19,13 @@ function Signup() {
             return;
         }
 
-        const userCreds = await firebase.signup(email,password);
-        console.log(userCreds);
+        const signupRepsonse = await firebase.signup(name,email,password);
+        if(signupRepsonse?.code===500){
+            alert("Error Logging in")
+        }
+        else {
+            navigator("/");
+        }
     }
    return (
     <div className='Signup'>

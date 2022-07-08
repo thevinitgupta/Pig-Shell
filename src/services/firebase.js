@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
-     signInWithEmailAndPassword, signOut } from "firebase/auth";
+     signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -13,13 +13,23 @@ const firebaseConfig = {
 };
 
 
-const createAccount = async(email, password) =>{
+const createAccount = async(name, email, password) =>{
+    const auth = getAuth();
     try {
-        const credentials = await createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-        return credentials.user;
+        const credentials = await createUserWithEmailAndPassword(auth, email, password)
+        // console.log(credentials)
+        const updatedUser = await updateProfile(credentials.user, {displayName : name})
+        return {
+            code : 200,
+            user : credentials.user
+        }
     }
     catch(error){
-        console.error(error)
+        console.log(error)
+        return {
+            code : 500,
+            user : null
+        };
     }
 }
 

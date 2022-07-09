@@ -21,7 +21,7 @@ function Signup() {
 
         const signupRepsonse = await firebase.signup(name,email,password);
         if(signupRepsonse?.code===500){
-            alert("Error Logging in")
+            alert("Error Signing Up")
         }
         else {
             navigator("/");

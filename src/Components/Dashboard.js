@@ -1,16 +1,18 @@
-import React, { useState} from 'react'
+import React, { useState, useEffect} from 'react'
 import "../Css/Dashboard.css"
 import { useNavigate } from 'react-router-dom';
 import Loader from "../Assets/Loader.svg"
 import Download from "../Assets/Icons/download.svg"
 import Delete from "../Assets/Icons/trash.svg"
 
+
 function Dashboard() {
     const [loaded, setLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [userImages, setUserImages] = useState([]);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const authUser = useSelector(selectUser);
 
-    const {authUser} =null;
     const navigate = useNavigate();
 
     let images = [];
@@ -55,6 +57,15 @@ function Dashboard() {
     //       console.log(error);
     //   })
     // }, [])
+
+    useEffect(()=>{
+        if(authUser!=null){
+          setLoggedIn(true);
+        }
+        else {
+          setLoggedIn(false);
+        }
+      },[authUser])
     
 
   return (

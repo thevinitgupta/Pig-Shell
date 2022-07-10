@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Loader from "../Assets/Loader.svg"
 import Download from "../Assets/Icons/download.svg"
 import Delete from "../Assets/Icons/trash.svg"
-import { useDispatch, useSelector } from 'react-redux';
-import { logout, selectUser } from '../features/userSlice';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/userSlice';
 import {default as firebase} from '../services/firebase';
 
 function Dashboard() {

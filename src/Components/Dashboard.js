@@ -19,6 +19,8 @@ function Dashboard() {
 
     let images = [];
 
+    
+
     // const getImageToDisplay =  (currImages) =>{
     //     return new Promise((resolve,rejet)=>{
     //         if(currImages.length>=1){

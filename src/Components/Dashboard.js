@@ -40,9 +40,7 @@ function Dashboard() {
     }
 
     const downloadImage =  (index) =>{
-        // const imageId = userImages[index].pathname.split("/")[6];
-        // const downloadLink = appwrite.downloadImage(imageId);
-        // window.open(downloadLink.href)
+        
     }
 
     // useEffect(() => {   

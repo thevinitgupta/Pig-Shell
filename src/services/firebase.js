@@ -68,12 +68,10 @@ const logoutUser = async ()=>{
 
 const uploadImage = async (uid,file) =>{
     // 'file' comes from the Blob or File API
-    const storageRef = ref(storage, `${uid}`);
+    const storageRef = ref(storage, `images/${uid}/${file.name}`);
 
-    uploadBytes(storageRef, file).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-        console.log(snapshot);
-    });
+    const data = await uploadBytes(storageRef, file);
+    return data;
 }
 
 
@@ -82,6 +80,7 @@ const firebaseMethods = {
     signup : createAccount,
     login : loginUser,
     logout : logoutUser,
+    upload : uploadImage
 }
 
 const firebaseApp = initializeApp(firebaseConfig);

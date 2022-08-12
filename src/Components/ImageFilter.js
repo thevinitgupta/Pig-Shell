@@ -8,6 +8,8 @@ import Obj4 from "../Assets/FilterPage/4.png"
 import Convert from "../Assets/FilterPage/Convert.png"
 // import { AppwriteContext } from './Appwrite';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from '../features/userSlice';
 import {default as firebase} from '../services/firebase';
 
 function ImageFilter() {
@@ -17,14 +19,14 @@ function ImageFilter() {
     const [binaryUrl, setBinaryUrl] = useState("");
     const [imageName, setImageName] = useState("pigshell");
     
-    const authUser = null;
-    // const appwrite = useContext(AppwriteContext);
-
+    const authUser = useSelector(selectUser);
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
     const uploadRef = useRef(null);
     const canvRef = useRef(null);
     const uploaderRef = useRef(null);
 
-    const navigator = useNavigate();
+
 
     function handleCustomUpload(){
         uploaderRef.current.click();
@@ -71,11 +73,8 @@ function ImageFilter() {
         console.log(blob)
         const file = new File([blob], imageName, {type:"image/png", lastModified:new Date()});
         console.log(file);
-        firebase.uploadImage(file).then((res)=>{
-            console.log("image uploaded successfully", res)
-        }).catch((error) =>{
-            console.log("Error Uploading Image", error);
-        })
+        const uploadData = firebase.upload(authUser?.uid, file)
+        console.log(uploadData)
     }
   return (
     <div className='ImageFilter'>

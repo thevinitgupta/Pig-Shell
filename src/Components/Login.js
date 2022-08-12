@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import LoginImg from "../Assets/Signup.png"
 import "../Css/Login.css"
 import Pig from "../Assets/pig.png"
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from '../features/userSlice';
 import {default as firebase} from '../services/firebase';
 
 
 function Login() {
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
+    const authUser = useSelector(selectUser);
+    const dispatch = useDispatch();
 
     const navigator = useNavigate();
 
@@ -26,9 +30,16 @@ function Login() {
         else {
             console.log(loginResponse.user)
             navigator("/");
+            dispatch(login);
         }
         // console.log(loginResponse)
     }
+
+    useEffect(()=>{
+        if(authUser!=null){
+          navigator("/");
+        }
+      },[authUser])
 
    return (
     <div className='Login'>

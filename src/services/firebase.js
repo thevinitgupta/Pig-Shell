@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
      signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -65,6 +66,15 @@ const logoutUser = async ()=>{
     }
 }
 
+const uploadImage = async (uid,file) =>{
+    // 'file' comes from the Blob or File API
+    const storageRef = ref(storage, `${uid}`);
+
+    uploadBytes(storageRef, file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        console.log(snapshot);
+    });
+}
 
 
 
@@ -76,6 +86,8 @@ const firebaseMethods = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth;
+const storage = getStorage(firebaseApp, "gs://pigshellpix.appspot.com");
+// const storageRef = ref(storage);
 
 
 export {auth}

@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SignupImg from "../Assets/Signup.png"
 import "../Css/Signup.css"
 import Pig from "../Assets/pig.png"
 import { useNavigate } from 'react-router-dom';
-import {default as firebase} from "../services/firebase"
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from '../features/userSlice';
+import {default as firebase} from '../services/firebase';
 
 function Signup() {
     const [name,setName] = useState("");
@@ -11,6 +13,8 @@ function Signup() {
     const [password,setPassword] = useState("");
 
     const navigator = useNavigate();
+    const dispatch = useDispatch();
+    const authUser = useSelector(selectUser);
     
     const handleSignup = async(e) => {
         e.preventDefault();
@@ -24,9 +28,16 @@ function Signup() {
             alert("Error Signing Up")
         }
         else {
+            dispatch(login);
             navigator("/");
         }
     }
+
+    useEffect(()=>{
+        if(authUser!=null){
+            navigator("/");
+        }
+    },[authUser])
    return (
     <div className='Signup'>
         <div className='Signup-left'>

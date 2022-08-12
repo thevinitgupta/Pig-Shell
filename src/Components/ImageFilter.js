@@ -8,6 +8,7 @@ import Obj4 from "../Assets/FilterPage/4.png"
 import Convert from "../Assets/FilterPage/Convert.png"
 // import { AppwriteContext } from './Appwrite';
 import { useNavigate } from 'react-router-dom';
+import {default as firebase} from '../services/firebase';
 
 function ImageFilter() {
     const [imageToConvert, setImageToConvert] = useState(null);
@@ -70,11 +71,11 @@ function ImageFilter() {
         console.log(blob)
         const file = new File([blob], imageName, {type:"image/png", lastModified:new Date()});
         console.log(file);
-        // appwrite.uploadImage(file).then((res)=>{
-        //     console.log("image uploaded successfully", res)
-        // }).catch((error) =>{
-        //     console.log("Error Uploading Image", error);
-        // })
+        firebase.uploadImage(file).then((res)=>{
+            console.log("image uploaded successfully", res)
+        }).catch((error) =>{
+            console.log("Error Uploading Image", error);
+        })
     }
   return (
     <div className='ImageFilter'>

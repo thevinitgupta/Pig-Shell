@@ -1,7 +1,7 @@
 import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
      signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -75,12 +75,40 @@ const uploadImage = async (uid,file) =>{
 }
 
 
+const getImages = async (uid)=>{
+    const listRef = ref(storage, `images/${uid}`);
+    const images = await listAll(listRef);
+    // console.log(images);
+    let urls = [];
+    images.items.forEach((image,index)=>{
+        const url = getUrl(image);
+        if(url.length>0){
+            urls.push({
+                url,
+                id : image.path_
+            });
+        }
+    })
+    return urls;
+}
+
+const getUrl = async (image) =>{
+    console.log(image)
+    const imgRef = ref(storage, `${image.path_}`);
+    const url = await getDownloadURL(imgRef);
+    console.log(url);
+    return "";    
+}
+
+
 
 const firebaseMethods = {
     signup : createAccount,
     login : loginUser,
     logout : logoutUser,
-    upload : uploadImage
+    upload : uploadImage,
+    images : getImages,
+    getUrl : getUrl
 }
 
 const firebaseApp = initializeApp(firebaseConfig);

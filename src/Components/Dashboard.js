@@ -7,17 +7,16 @@ import Delete from "../Assets/Icons/trash.svg"
 import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice';
 import {default as firebase} from '../services/firebase';
-
 function Dashboard() {
     const [loaded, setLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [userImages, setUserImages] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false);
+    // const [images,setImages] = useState([]);
     const authUser = useSelector(selectUser);
 
     const navigate = useNavigate();
 
-    let images = [];
 
     
 
@@ -43,26 +42,30 @@ function Dashboard() {
         
     }
 
+    
+
     // useEffect(() => {   
-    //   appwrite.getImages().then((data)=>{
-    //     setLoading(true);
-    //     setTimeout( ()=>{
-    //         setLoading(false);
-    //         setUserImages(data.files);
-    //         getImageToDisplay(data.files).then(()=>{
-    //             setLoaded(true);
-    //         }).catch(()=>{
-    //             console.log("Images Not loaded")
-    //         });
-    //       },4000)
+      
+      //then((data)=>{
+        // setLoading(true);
+        // setTimeout( ()=>{
+        //     setLoading(false);
+        //     setUserImages(data.files);
+        //     getImageToDisplay(data.files).then(()=>{
+        //         setLoaded(true);
+        //     }).catch(()=>{
+        //         console.log("Images Not loaded")
+        //     });
+        //   },4000)
     //   }).catch((error) =>{
     //       console.log(error);
     //   })
-    // }, [])
+    // }, [authUser])
 
     useEffect(()=>{
         if(authUser!=null){
           setLoggedIn(true);
+          setUserImages(firebase.images(authUser.uid));
         }
         else {
           setLoggedIn(false);
@@ -90,7 +93,7 @@ function Dashboard() {
                     </div>}
                     {userImages.length>0 && userImages.map((image,index)=>{
                         return <div key={index+Math.random()*10} className='UserImage'>
-                            <img src={image.href} alt="Gallery"/>
+                            <img src={`${image.url}`} alt="Gallery"/>
                             <div className='Image-btns'>
                                 <div className='Image-btn download' onClick={()=>{
                                     downloadImage(index)

@@ -93,7 +93,7 @@ function Dashboard() {
                     </div>}
                     {userImages.length>0 && userImages.map((image,index)=>{
                         return <div key={index+Math.random()*10} className='UserImage'>
-                            <img src={`${image.url}`} alt="Gallery"/>
+                            <img src={`images/AgsFo8gN4xgtCTDExzqjZnc3KrB3/shaz-pigshell.png`} alt="Gallery"/>
                             <div className='Image-btns'>
                                 <div className='Image-btn download' onClick={()=>{
                                     downloadImage(index)

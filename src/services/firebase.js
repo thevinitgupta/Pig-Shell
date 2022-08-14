@@ -2,6 +2,8 @@ import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
      signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
+
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_apiKey ,
@@ -20,6 +22,7 @@ const createAccount = async(name, email, password) =>{
         const credentials = await createUserWithEmailAndPassword(auth, email, password)
         // console.log(credentials)
         const updatedUser = await updateProfile(credentials.user, {displayName : name})
+        await createDocument(credentials.user.uid);
         return {
             code : 200,
             user : credentials.user
@@ -66,30 +69,42 @@ const logoutUser = async ()=>{
     }
 }
 
+const createDocument = async(uid) => {
+    await setDoc(doc(db, 'TodoLists', `${uid}`), {
+        completed : [],
+        todo : []
+    });
+}
+
 const uploadImage = async (uid,file) =>{
     // 'file' comes from the Blob or File API
     const storageRef = ref(storage, `images/${uid}/${file.name}`);
 
     const data = await uploadBytes(storageRef, file);
+    const downloadUrl = await getDownloadURL(storageRef);
+    await addImageUrl(uid, downloadUrl);
     return data;
 }
 
+const addImageUrl = async (uid,imgUrl) =>{
+    const urls = await fetchDocuments(uid);
+    urls.add(imgUrl);
+    await setDoc(doc(db, 'UserData', `${uid}`), {
+        urls
+    });
+}
+
+const fetchDocuments = async (uid) => {
+    if(uid!==null){
+        const unsub = onSnapshot(doc(db, "UserData", `${uid}`), (doc) => {
+            const data = doc.data();
+            return data.urls;
+        });
+    }
+}
 
 const getImages = async (uid)=>{
-    const listRef = ref(storage, `images/${uid}`);
-    const images = await listAll(listRef);
-    // console.log(images);
-    let urls = [];
-    images.items.forEach((image,index)=>{
-        const url = getUrl(image);
-        if(url.length>0){
-            urls.push({
-                url,
-                id : image.path_
-            });
-        }
-    })
-    return urls;
+    
 }
 
 const getUrl = async (image) =>{
@@ -112,6 +127,7 @@ const firebaseMethods = {
 }
 
 const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 const auth = getAuth;
 const storage = getStorage(firebaseApp, "gs://pigshellpix.appspot.com");
 // const storageRef = ref(storage);

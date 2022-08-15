@@ -2,7 +2,7 @@ import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
      signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -70,15 +70,14 @@ const logoutUser = async ()=>{
 }
 
 const createDocument = async(uid) => {
-    await setDoc(doc(db, 'TodoLists', `${uid}`), {
-        completed : [],
-        todo : []
+    await setDoc(doc(db, 'UserData', `${uid}`), {
+        urls : []
     });
 }
 
 const uploadImage = async (uid,file) =>{
     // 'file' comes from the Blob or File API
-    const storageRef = ref(storage, `images/${uid}/${file.name}`);
+    const storageRef = ref(storage, `images/${file.name}`);
 
     const data = await uploadBytes(storageRef, file);
     const downloadUrl = await getDownloadURL(storageRef);
@@ -87,20 +86,27 @@ const uploadImage = async (uid,file) =>{
 }
 
 const addImageUrl = async (uid,imgUrl) =>{
-    const urls = await fetchDocuments(uid);
-    urls.add(imgUrl);
+    if(uid===undefined || !uid) return;
+    let urls = await fetchDocuments(uid);
+    // console.log(urls);
+    urls.push(imgUrl);
     await setDoc(doc(db, 'UserData', `${uid}`), {
-        urls
+        urls : urls
     });
 }
 
 const fetchDocuments = async (uid) => {
-    if(uid!==null){
-        const unsub = onSnapshot(doc(db, "UserData", `${uid}`), (doc) => {
-            const data = doc.data();
-            return data.urls;
-        });
-    }
+    console.log(uid)
+    const docRef = doc(db, "UserData", `${uid}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return data.urls;
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        return [];
+      }
 }
 
 const getImages = async (uid)=>{
@@ -122,8 +128,7 @@ const firebaseMethods = {
     login : loginUser,
     logout : logoutUser,
     upload : uploadImage,
-    images : getImages,
-    getUrl : getUrl
+    getImages : fetchDocuments
 }
 
 const firebaseApp = initializeApp(firebaseConfig);

@@ -38,8 +38,14 @@ function Dashboard() {
 
     }
 
-    const downloadImage =  (index) =>{
-        
+    const downloadImage =  (url) =>{
+            
+            // let a = document.createElement('a');
+            // a.setAttribute("download",url.split("%2F")[1].split("?")[0]);
+            // a.href = url;
+            // document.body.appendChild(a);
+            // a.click();
+            // a.remove();
     }
 
     
@@ -65,7 +71,10 @@ function Dashboard() {
     useEffect(()=>{
         if(authUser!=null){
           setLoggedIn(true);
-          setUserImages(firebase.images(authUser.uid));
+         firebase.getImages(authUser.uid).then((res) =>{
+            console.log(res);
+            setUserImages(res);
+         });
         }
         else {
           setLoggedIn(false);
@@ -93,10 +102,10 @@ function Dashboard() {
                     </div>}
                     {userImages.length>0 && userImages.map((image,index)=>{
                         return <div key={index+Math.random()*10} className='UserImage'>
-                            <img src={`images/AgsFo8gN4xgtCTDExzqjZnc3KrB3/shaz-pigshell.png`} alt="Gallery"/>
+                            <img src={image} alt="Gallery"/>
                             <div className='Image-btns'>
                                 <div className='Image-btn download' onClick={()=>{
-                                    downloadImage(index)
+                                    downloadImage(image)
                                 }}><img src={Download} alt="download"/></div>
                                 <div className='Image-btn delete' onClick={()=>{
                                     deleteImage(index)

@@ -40,12 +40,12 @@ function Dashboard() {
 
     const downloadImage =  (url) =>{
             
-            // let a = document.createElement('a');
-            // a.setAttribute("download",url.split("%2F")[1].split("?")[0]);
-            // a.href = url;
-            // document.body.appendChild(a);
-            // a.click();
-            // a.remove();
+            let a = document.createElement('a');
+            a.setAttribute("download",url.split("%2F")[1].split("?")[0]);
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
     }
 
     

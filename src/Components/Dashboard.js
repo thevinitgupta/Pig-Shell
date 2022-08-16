@@ -7,9 +7,11 @@ import Delete from "../Assets/Icons/trash.svg"
 import { useSelector } from 'react-redux';
 import { selectUser } from '../features/userSlice';
 import {default as firebase} from '../services/firebase';
+import { saveAs } from "file-saver";
+
 function Dashboard() {
     const [loaded, setLoaded] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [userImages, setUserImages] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false);
     // const [images,setImages] = useState([]);
@@ -18,34 +20,19 @@ function Dashboard() {
     const navigate = useNavigate();
 
 
-    
+    const deleteImage = (url) =>{
+       firebase.delete(url);
+    }
 
-    // const getImageToDisplay =  (currImages) =>{
-    //     return new Promise((resolve,rejet)=>{
-    //         if(currImages.length>=1){
-    //             // currImages.forEach((imageData, index) => {
-    //             //     images.push(appwrite.loadImage(imageData.$id));
-    //             // })
-    //             setUserImages(images);
-    //             resolve();
-    //         }
-    //         else rejet();
-    //     })
-    // }
-
-    const deleteImage = (index) =>{
-        const imageId = userImages[index].pathname.split("/")[6];
-
+    const removeImage = (index)=>{
+        setUserImages((prevValue)=>{
+            return [...prevValue.slice(0,index),...prevValue.slice(index+1)];
+        })
+        firebase.update([...userImages.slice(0,index),...userImages.slice(index+1)], authUser.uid);
     }
 
     const downloadImage =  (url) =>{
-            
-            let a = document.createElement('a');
-            a.setAttribute("download",url.split("%2F")[1].split("?")[0]);
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            firebase.download(url);
     }
 
     
@@ -58,7 +45,7 @@ function Dashboard() {
         //     setLoading(false);
         //     setUserImages(data.files);
         //     getImageToDisplay(data.files).then(()=>{
-        //         setLoaded(true);
+        //         
         //     }).catch(()=>{
         //         console.log("Images Not loaded")
         //     });
@@ -74,6 +61,10 @@ function Dashboard() {
          firebase.getImages(authUser.uid).then((res) =>{
             console.log(res);
             setUserImages(res);
+            setTimeout(()=>{
+                setLoading(false);
+                setLoaded(true);
+            },2500)
          });
         }
         else {
@@ -100,7 +91,7 @@ function Dashboard() {
                     {<div className='loader' style={!loaded && loading ? {opacity : 1} : {opacity : 0}}>
                         <img src={Loader} alt='Loading...'/>
                     </div>}
-                    {userImages.length>0 && userImages.map((image,index)=>{
+                    {loaded && userImages.length>0 && userImages.map((image,index)=>{
                         return <div key={index+Math.random()*10} className='UserImage'>
                             <img src={image} alt="Gallery"/>
                             <div className='Image-btns'>
@@ -108,7 +99,7 @@ function Dashboard() {
                                     downloadImage(image)
                                 }}><img src={Download} alt="download"/></div>
                                 <div className='Image-btn delete' onClick={()=>{
-                                    deleteImage(index)
+                                    deleteImage(image); removeImage(index);
                                 }}><img src={Delete} alt="delete"/></div>
                             </div>
                         </div>

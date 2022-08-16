@@ -54,15 +54,16 @@
 }
 .UserImage{
     position: relative;
-    z-index: 5;
-    flex: 0.25;
-    height: 15vh;
-    min-height: 250px;
-    min-width: 220px;
-    max-width: 300px;
-    max-height: 250px;
-    object-fit: contain;
-    margin-bottom: 3%;
+z-index: 5;
+flex: 0.25 1 0%;
+height: 15vh;
+min-height: 250px;
+min-width: 220px;
+max-width: 300px;
+max-height: 250px;
+object-fit: contain;
+margin-bottom: 3%;
+margin-right: 5%;
 
 }
 .UserImage>img {

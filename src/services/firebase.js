@@ -1,8 +1,8 @@
 import {initializeApp} from "firebase/app"
 import { getAuth ,createUserWithEmailAndPassword, 
      signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, listAll, getDownloadURL, getBlob, deleteObject } from "firebase/storage";
+import { getFirestore, doc, setDoc, getDoc  } from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -109,8 +109,17 @@ const fetchDocuments = async (uid) => {
       }
 }
 
-const getImages = async (uid)=>{
-    
+const downloadImage = async (url)=>{
+
+  const imageURL = url;
+
+  const link = document.createElement('a')
+  link.href = imageURL
+  link.download = url.split("%2F")[1].split("?")[0];
+  link.target = "_blank"
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 
 const getUrl = async (image) =>{
@@ -121,6 +130,21 @@ const getUrl = async (image) =>{
     return "";    
 }
 
+const updateDocuments = async (urls,uid) =>{
+    console.log(urls)
+    await setDoc(doc(db, 'UserData', `${uid}`), {
+        urls : urls
+    });
+}
+
+
+const deleteImage = async (url) =>{
+    const imgName = url.split("%2F")[1].split("?")[0];
+    const imgRef = ref(storage, `images/${imgName}`);
+    const deleteData = await deleteObject(imgRef);
+    console.log(deleteData);
+}
+
 
 
 const firebaseMethods = {
@@ -128,7 +152,10 @@ const firebaseMethods = {
     login : loginUser,
     logout : logoutUser,
     upload : uploadImage,
-    getImages : fetchDocuments
+    getImages : fetchDocuments,
+    download : downloadImage,
+    delete : deleteImage,
+    update : updateDocuments
 }
 
 const firebaseApp = initializeApp(firebaseConfig);

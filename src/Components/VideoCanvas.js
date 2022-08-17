@@ -1,12 +1,12 @@
 import React, { createRef, useEffect } from 'react'
 import AsciiEffect from '../Functions/AsciiEffect';
 
-export default function VideoCanvas({ videoRef }) {
+export default function VideoCanvas({ videoRef,dimensions }) {
     const canvasRef = createRef(null);
     const recorderRef = createRef(null);
     const canvasDimensions = {
-        height : 510,
-        width : 640
+        height : dimensions.height,
+        width : dimensions.width
     }
 
     let canvas = null;

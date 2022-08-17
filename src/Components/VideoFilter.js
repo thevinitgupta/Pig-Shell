@@ -1,4 +1,4 @@
-import React, { useRef,useState } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import "../Css/VideoFilter.css"
 import Obj1 from "../Assets/FilterPage/1.png"
 import Obj2 from "../Assets/FilterPage/2.png"
@@ -11,12 +11,16 @@ import VideoCanvas from "./VideoCanvas";
 function VideoFilter(){
     const [streaming,setStreaming] = useState(false);
     const [localStream,setLocalStream] = useState({});
+    const [screenDimensions, setScreenDimensions] = useState({
+        width : 400,
+        height : 400
+    })
     const videoRef = useRef(null);
 
     const getVideo = () =>{
         setStreaming(true);
         window.navigator.mediaDevices.getUserMedia({
-            video : {width : 1920, height : 1080}
+            video : screenDimensions
         }).then(stream =>{
             const video = videoRef.current;
             video.srcObject = stream;
@@ -42,6 +46,14 @@ function VideoFilter(){
         setStreaming(false);
     }
 
+    useEffect(()=>{
+        const dimensions = {
+            width : window.innerWidth,
+            height : window.innerHeight
+        }
+        setScreenDimensions(dimensions);
+    },[])
+
     return (
         <div className="VideoFilter">
             <div className="VideoHead">
@@ -59,7 +71,7 @@ function VideoFilter(){
             </div>
             {streaming ? <div className="VideoCamera">
                 <video  ref={videoRef}  />
-                <VideoCanvas videoRef={videoRef}/>
+                <VideoCanvas videoRef={videoRef} dimensions={screenDimensions} />
             </div> 
             : 
             <div className='PreviewImage'>

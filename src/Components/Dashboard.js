@@ -35,26 +35,6 @@ function Dashboard() {
             firebase.download(url);
     }
 
-    
-
-    // useEffect(() => {   
-      
-      //then((data)=>{
-        // setLoading(true);
-        // setTimeout( ()=>{
-        //     setLoading(false);
-        //     setUserImages(data.files);
-        //     getImageToDisplay(data.files).then(()=>{
-        //         
-        //     }).catch(()=>{
-        //         console.log("Images Not loaded")
-        //     });
-        //   },4000)
-    //   }).catch((error) =>{
-    //       console.log(error);
-    //   })
-    // }, [authUser])
-
     useEffect(()=>{
         if(authUser!=null){
           setLoggedIn(true);

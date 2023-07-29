@@ -20,9 +20,25 @@ It is a really simple one : `a pixel to ASCII filter`.
 2. Saving it in the users account.
 3. Retrieving them from any where.
 ## Technologies Used
-| Tech       | Used for |
-|------------|----------|
-| ReactJS    | Frontend |
-| Firebase   | Backend  |
-| CSS        | Styling  |
-| Javascript | Language |
+<table>
+    <tr>
+        <td>Tech</td>
+        <td>Used For</td>
+    </tr>
+    <tr>
+        <td>ReactJS</td>
+        <td>Frontend</td>
+    </tr>
+    <tr>
+        <td>Firebase</td>
+        <td>Backend</td>
+    </tr>
+    <tr>
+        <td>CSS</td>
+        <td>Styling</td>
+    </tr>
+    <tr>
+        <td>Javascript</td>
+        <td>Language</td>
+    </tr>
+</table>

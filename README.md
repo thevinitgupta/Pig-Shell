@@ -20,25 +20,4 @@ It is a really simple one : `a pixel to ASCII filter`.
 2. Saving it in the users account.
 3. Retrieving them from any where.
 ## Technologies Used
-<table>
-    <tr>
-        <td>Tech</td>
-        <td>Used For</td>
-    </tr>
-    <tr>
-        <td>ReactJS</td>
-        <td>Frontend</td>
-    </tr>
-    <tr>
-        <td>Firebase</td>
-        <td>Backend</td>
-    </tr>
-    <tr>
-        <td>CSS</td>
-        <td>Styling</td>
-    </tr>
-    <tr>
-        <td>Javascript</td>
-        <td>Language</td>
-    </tr>
-</table>
+<table><thead><tr><th>Tech</th><th>Used For</th></tr></thead><tbody><tr><th>ReactJS</th><td>Frontend</td></tr><tr><th>Firebase</th><td>Backend</td></tr><tr><th>CSS</th><td>Styling</td></tr><tr><th>Javascript</th><td>Language</td></tr></tbody></table>
